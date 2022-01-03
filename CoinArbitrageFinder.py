@@ -6,7 +6,7 @@ import time
 scraper = Scraper()
 
 
-def arbitrage_finder_one_pair(tickers, precent=1.00):
+def arbitrage_finder_one_pair(tickers, precent=1.009):
     arbits = []
     for t in range(len(tickers)):
         m1 = tickers[t].get('market')
@@ -29,7 +29,6 @@ def arbitrage_finder_one_pair(tickers, precent=1.00):
             for i in coins:
                 if i.symbol in (t_2, b2):
                     fees.append(i.fees_url)
-
 
             if conv_price1 > conv_price2:
                 p = conv_price1 / conv_price2
@@ -72,20 +71,39 @@ def arbit_func(coins):
         json.dump(js, file)
 
 w = 0
+
+def convert_tickers_contracts():
+    coins = Coin.__base__.instance
+    for cc in coins:
+        tickers = cc.get_coin_tickers()
+        for t in tickers:
+            if len(t['base']) == 42:
+                for c in coins:
+                    ct = c.get_coin_platforms().values()
+                    if t['base'] in ct:
+                        t['base'] = c.symbol
+            if len(t['target']) == 42:
+                for c in coins:
+                    ct = c.get_coin_platforms().values()
+                    if t['target'] in ct:
+                        t['target'] = c.symbol
+        cc.tickers = tickers
+
 if scraper.get_servers_status() == 200:
     coins = scraper.get_all_coins()
     for coin in coins:
+        if scraper.calls == 49:
+            coins = Coin.__base__.instance
+            arbit_func(coins)
         w+=1
-        if w == 5:
+        if w == 5000:
             break
         name, id, symbol = coin[0], coin[1], coin[2]
         data = scraper.get_coin_info(id, name)
         if data == None:
             continue
         platforms, tickers, fees_url = data
+        convert_tickers_contracts()
+
+
         Coin(name, platforms, tickers, fees_url, symbol)
-        if scraper.calls == 3:
-            coins = Coin.__base__.instance
-            arbit_func(coins)
-else:
-    print('500')
