@@ -24,6 +24,13 @@ def arbitrage_finder_one_pair(tickers, precent=1.00):
             volume2 = tickers[t2].get('volume')
             if b1 not in (t_2, b2) or t1 not in (t_2, b2):
                 continue
+
+            fees = list()
+            for i in coins:
+                if i.symbol in (t_2, b2):
+                    fees.append(i.fees_url)
+
+
             if conv_price1 > conv_price2:
                 p = conv_price1 / conv_price2
                 arbits.append({'precent': p,
@@ -31,7 +38,8 @@ def arbitrage_finder_one_pair(tickers, precent=1.00):
                 'baseFrom': b2, 'targetFrom': t_2,
                 'baseTo': b1, 'targetTo': t1,
                 'convertedPriceFrom': conv_price2, 'convertedPriceTo': conv_price1,
-                'volume': min(volume1, volume2)})
+                'volume': min(volume1, volume2),
+                'fees': fees})
             else:
                 p = conv_price2 / conv_price1
                 arbits.append({'precent': p,
@@ -39,7 +47,8 @@ def arbitrage_finder_one_pair(tickers, precent=1.00):
                 'baseFrom': b1, 'targetFrom': t1,
                 'baseTo': b2, 'targetTo': t_2,
                 'convertedPriceFrom': conv_price1, 'convertedPriceTo': conv_price2,
-                min(volume1, volume2)})
+                'volume': min(volume1, volume2),
+                'fees': fees})
     return arbits
 
 
@@ -65,16 +74,18 @@ def arbit_func(coins):
 w = 0
 if scraper.get_servers_status() == 200:
     coins = scraper.get_all_coins()
-    for coin in coins[::-1]:
+    for coin in coins:
         w+=1
-        if w == 10000:
+        if w == 5:
             break
-        name, id = coin[0], coin[1]
-        data = scraper.get_coin_info(id)
+        name, id, symbol = coin[0], coin[1], coin[2]
+        data = scraper.get_coin_info(id, name)
         if data == None:
             continue
-        platforms, tickers = data
-        Coin(name, platforms, tickers)
-        if scraper.calls == 49:
+        platforms, tickers, fees_url = data
+        Coin(name, platforms, tickers, fees_url, symbol)
+        if scraper.calls == 3:
             coins = Coin.__base__.instance
             arbit_func(coins)
+else:
+    print('500')

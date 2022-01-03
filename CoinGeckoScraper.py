@@ -18,11 +18,15 @@ class CoinMetaClass:
 
 class Coin(CoinMetaClass):
     name = ''
-    def __init__(self, name, platforms, tickers):
+    fees_url = ''
+    symbol = ''
+    def __init__(self, name, platforms, tickers, fees_url, symbol):
         super().__init__()
         self.name = name
         self.platforms = platforms
         self.tickers = tickers
+        self.fees_url = fees_url
+        self.symbol = symbol
 
     def get_coin_platforms(self):
         return self.platforms
@@ -66,10 +70,10 @@ class Scraper:
         clear_data = list()
         for coin in coins:
             if 'short' not in coin['id'] and 'long' not in coin['id']:
-                clear_data.append([coin['name'], coin['id']])
+                clear_data.append([coin['name'], coin['id'], coin['symbol']])
         return clear_data
 
-    def get_coin_info(self, coin_id):
+    def get_coin_info(self, coin_id, coin_name):
 
         '''Collects arbitrage important information: platforms/tickers. Returns a list.'''
 
@@ -92,4 +96,8 @@ class Scraper:
 
         # Gets platforms where coin is run
         platforms = coin_data.get('platforms')
-        return [platforms, clear_data]
+
+        # coin fees url
+        slug_name = coin_name.replace(' ', '-')
+        fee_url = 'https://withdrawalfees.com/coins/{}'.format(slug_name.lower())
+        return [platforms, clear_data, fee_url]
