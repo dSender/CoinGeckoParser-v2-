@@ -1,4 +1,5 @@
 from CoinGeckoScraper import Scraper, Coin
+from pathlib import Path
 import json
 import time
 
@@ -88,6 +89,8 @@ def convert_tickers_contracts():
                     if t['target'] in ct:
                         t['target'] = c.symbol
         cc.tickers = tickers
+
+p = Path('CryptoArbitrage/mainApp/models.py')
 
 if scraper.get_servers_status() == 200:
     coins = scraper.get_all_coins()
