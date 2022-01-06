@@ -30,7 +30,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-API_FILE = BASE_DIR.parent / 'onePairCoinArbit.json'
+API_FILE = 'onePairCoinArbit.json'
 
 INSTALLED_APPS = [
     'django.contrib.admin',

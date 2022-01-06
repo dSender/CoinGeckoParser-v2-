@@ -6,9 +6,10 @@ import time
 
 scraper = Scraper()
 
-
+arbit_id = -1
 def arbitrage_finder_one_pair(tickers, precent=1.009):
     arbits = []
+    global arbit_id
     for t in range(len(tickers)):
         m1 = tickers[t].get('market')
         conv_price1 = tickers[t].get('converted price')
@@ -30,7 +31,7 @@ def arbitrage_finder_one_pair(tickers, precent=1.009):
             for i in coins:
                 if i.symbol in (t_2, b2):
                     fees.append(i.fees_url)
-
+            arbit_id += 1
             if conv_price1 > conv_price2:
                 p = conv_price1 / conv_price2
                 arbits.append({'precent': p,
@@ -38,7 +39,7 @@ def arbitrage_finder_one_pair(tickers, precent=1.009):
                 'baseFrom': b2, 'targetFrom': t_2,
                 'baseTo': b1, 'targetTo': t1,
                 'convertedPriceFrom': conv_price2, 'convertedPriceTo': conv_price1,
-                'volume': min(volume1, volume2),
+                'volume': min(volume1, volume2), 'id': arbit_id,
                 'fees': fees})
             else:
                 p = conv_price2 / conv_price1
@@ -47,7 +48,7 @@ def arbitrage_finder_one_pair(tickers, precent=1.009):
                 'baseFrom': b1, 'targetFrom': t1,
                 'baseTo': b2, 'targetTo': t_2,
                 'convertedPriceFrom': conv_price1, 'convertedPriceTo': conv_price2,
-                'volume': min(volume1, volume2),
+                'volume': min(volume1, volume2), 'id': arbit_id,
                 'fees': fees})
     return arbits
 
@@ -57,16 +58,13 @@ def arbit_func(coins):
         js = dict()
         for coin in coins:
             tic = coin.get_coin_tickers()
-            try:
-                arbitData = arbitrage_finder_one_pair(tic)
-            except:
-                continue
+            arbitData = arbitrage_finder_one_pair(tic)
             if arbitData == []:
                 continue
             platforms = coin.get_coin_platforms()
             for k in platforms.keys():
                 if k not in js.keys():
-                    js[k] = [[coin.name, arbitData]]
+                    js[k] = [[coin.name, arbitData]]    
                 else:
                     js[k].append([coin.name, arbitData])
         json.dump(js, file)
@@ -90,7 +88,6 @@ def convert_tickers_contracts():
                         t['target'] = c.symbol
         cc.tickers = tickers
 
-p = Path('CryptoArbitrage/mainApp/models.py')
 
 if scraper.get_servers_status() == 200:
     coins = scraper.get_all_coins()
@@ -107,6 +104,9 @@ if scraper.get_servers_status() == 200:
             continue
         platforms, tickers, fees_url = data
         convert_tickers_contracts()
-
-
         Coin(name, platforms, tickers, fees_url, symbol)
+        
+
+
+
+
