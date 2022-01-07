@@ -18,12 +18,13 @@ class CustomArbitManager(models.Manager):
             try:
                 return self.create(**kwargs)
             except IntegrityError:
-                self.get(**kwargs).delete()
+                self.get(aid=kwargs['aid']).delete()
                 return self.create(**kwargs)
 
 
 class Platform(models.Model):
     name = models.CharField(max_length=32)
+    custom_manager = CustomManager()
 
     def __str__(self):
         return self.name

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
@@ -7,10 +8,37 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{% static 'js/index.js'%}"></script>
   </head>
   <body>
-    {% for d in data %}
-      <p>{{d}}</p>
+    {% for k, v in data.items %}
+      <div id="network-" class='container'>
+        {% if k == '' %}
+        <p><h2 class='display-5'>No network data</h2></p>
+        {% else %}
+        <p><h2 class='display-5'>{{k}}</h2></p>
+        {% endif %}
+        <button type="button" name="button" value="hidden" class='hide-show-network-a #{{k}}_ btn btn-primary'>Show</button>
+      </div>
+      <div id="{{k}}_" class='row mt-4' style='display: none;'>
+        {% for l in v %}
+        <p><h5 class='pl-5'>{{l.0}}</h5></p>
+        <button type="button" name="button" value="hidden" class='hide-show-coins .{{k}}_{{l.0}} btn-secondary active'>Show</button>
+        <div class="{{k}}_{{l.0}} col-sm-" style='display: none;'>
+          {% for t in l %}
+            {% if forloop.counter > 1 %}
+              {% for s in t %}
+                <div class="pl-4 border">
+                  {% for b,n in s.items %}
+                    <p>{{b}} : {{n}}</p>
+                  {% endfor %}
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endfor %}
+        </div>
+        {% endfor %}
+      </div>
     {% endfor %}
   </body>
 </html>
