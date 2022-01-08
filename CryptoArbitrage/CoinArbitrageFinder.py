@@ -33,8 +33,8 @@ def arbitrage_finder_one_pair(tickers, precent=1.009):
                     fees.append(i.fees_url)
             arbit_id += 1
             if conv_price1 > conv_price2:
-                p = conv_price1 / conv_price2
-                arbits.append({'precent': p,
+                p = ((conv_price1 / conv_price2) - 1) * 100
+                arbits.append({'precent': int(p),
                 'from': m2, 'to': m1,
                 'baseFrom': b2, 'targetFrom': t_2,
                 'baseTo': b1, 'targetTo': t1,
@@ -42,8 +42,8 @@ def arbitrage_finder_one_pair(tickers, precent=1.009):
                 'volume': min(volume1, volume2), 'id': arbit_id,
                 'fees': fees})
             else:
-                p = conv_price2 / conv_price1
-                arbits.append({'precent': p,
+                p = ((conv_price2 / conv_price1) - 1) * 100
+                arbits.append({'precent': int(p),
                 'from': m1, 'to': m2,
                 'baseFrom': b1, 'targetFrom': t1,
                 'baseTo': b2, 'targetTo': t_2,
@@ -64,7 +64,7 @@ def arbit_func(coins):
             platforms = coin.get_coin_platforms()
             for k in platforms.keys():
                 if k not in js.keys():
-                    js[k] = [[coin.name, arbitData]]    
+                    js[k] = [[coin.name, arbitData]]
                 else:
                     js[k].append([coin.name, arbitData])
         json.dump(js, file)
@@ -105,8 +105,3 @@ if scraper.get_servers_status() == 200:
         platforms, tickers, fees_url = data
         convert_tickers_contracts()
         Coin(name, platforms, tickers, fees_url, symbol)
-        
-
-
-
-

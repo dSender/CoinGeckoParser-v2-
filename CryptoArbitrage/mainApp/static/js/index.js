@@ -9,8 +9,7 @@ $(document).ready(function(){
           $(this).attr('value', 'hidden');
       }
       else{
-        var pos = $(this).offset();
-        window.scrollTo(0, 0);
+
         $(this).text('Hide');
         $(this).attr('value', 'showed');
         $(net).show();
@@ -26,8 +25,6 @@ $(document).ready(function(){
         $(this).attr('value', 'hidden');
     }
     else{
-      var pos = $(this).offset();
-      window.scrollTo(0, 0);
       $(this).text('Hide');
       $(this).attr('value', 'showed');
       $(c).show();
