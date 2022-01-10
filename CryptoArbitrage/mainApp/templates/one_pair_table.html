@@ -17,7 +17,7 @@
     <div class="container-fluid">
       <form method="get">
         {{form.as_p}}
-        <input type="submit" value="Apply" class='btn btn-light'>
+        <input type="submit" value="Apply" class='btn btn-light border'>
       </form>
     </div>
     {% for k, v in data.items %}
@@ -38,15 +38,29 @@
             {% for t in l %}
               {% if forloop.counter > 1 %}
                 {% for s in t|slice:":1" %}
-                  <div class="pl-4 pr-1">
-                    {% for b,n in s.items %}
-                      <p>{{b}} : {{n}}</p>
-                    {% endfor %}
+                  <div class="">
+                    <div class=" container bg-light p-1">
+                      <h5 class=''>Precent: {{s.precent}}%</h5>
+                    </div>
+                    <div class=" container bg-dark p-1 text-white">
+                      <h5 class=''>Pair<br>{{s.baseFrom}}/{{s.targetFrom}} --> {{s.baseTo}}/{{s.targetTo}}</h5>
+                    </div>
+                    <div class=" container bg-light p-1">
+                      <h5 class=''>Coverted price to usd<br>{{s.convertedPriceFrom}}<span class='text-success'>$</span> --> {{s.convertedPriceTo}}<span class='text-success'>$</span></h5>
+                    </div>
+                    <div class=" container bg-dark p-1 text-white">
+                      <h5 class=''>Markets<br>{{s.from}} --> {{s.to}}</h5>
+                    </div>
+                    <div class=" container bg-light p-1">
+                      <h5 class=''>Volume<br>{{s.volume}}<span class='text-success'>$</span></h5>
+                    </div>
+                    <div class=" container bg-dark p-1 text-white">
+                      <h5 class=''><p>Coin fee: {% for f in s.fees %} <a href="{{f}}">{{f}}</a><br>{% endfor %}</p></h5>
+                    </div>
                     {% if t|length > 1%}
-                      <!--<a href="{{l.0}}">More</a>-->
-                      <form class="" method="get">
+                      <form class="pl-3 pt-2" method="get">
                         <input type="text" name="name" hidden value="{{l.0}}">
-                        <input type="submit" name="" value="submit" value='More'>
+                        <input type="submit" name="" value="More" class='btn btn-warning font-weight-bold mb-2' value='More'>
                       </form>
                     {% endif %}
                   </div>
