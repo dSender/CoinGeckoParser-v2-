@@ -7,7 +7,7 @@ import time
 scraper = Scraper()
 
 arbit_id = -1
-def arbitrage_finder_one_pair(tickers, precent=1.009):
+def arbitrage_finder_one_pair(tickers, precent=1.01):
     arbits = []
     global arbit_id
     for t in range(len(tickers)):

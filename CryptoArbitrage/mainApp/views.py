@@ -32,14 +32,29 @@ class OnePairArbitrageView(FormView):
             form = form(get_)
             filter_data = dict()
             name = self.cleaned_filter_name(name=get_.get('name'))
-            print(name)
+            precent = get_.get('precent')
+            if precent is not None and precent != '':
+                precent = int(precent[0])
+
             for d, c in data.items():
                 inds = []
+                inds_arbits = []
                 for i in range(len(c)):
                     if c[i][0] not in name and name != []:
                         inds.append(i)
+                    if precent is not None and precent != '':
+                        for m in range(len(c[i][1])):
+                            if c[i][1][m]['precent'] < precent:
+                                inds_arbits.append([i, m])
+
+                if inds_arbits:
+                    for i in inds_arbits[::-1]:
+                        c[i[0]][1].pop(i[1])
+
+
                 if inds:
                     for i in inds[::-1]:
                         c.pop(i)
+
 
         return render(request, self.template_name, {'data': data, 'form': form})
