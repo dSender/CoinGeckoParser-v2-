@@ -55,6 +55,18 @@ class OnePairArbitrageView(FormView):
                 if inds:
                     for i in inds[::-1]:
                         c.pop(i)
+        d_keys = list()
+        for k, v in data.items():
+            f = False
+            for i in data[k]:
+                if len(i[1]) != 0:
+                    f = True
+                    print(k, v, '\n')
+                    break
+            if not f:
+                d_keys.append(k)
+        for i in d_keys:
+            data.pop(i)
 
 
         return render(request, self.template_name, {'data': data, 'form': form})

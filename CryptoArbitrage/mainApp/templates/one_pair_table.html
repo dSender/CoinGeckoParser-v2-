@@ -32,44 +32,47 @@
         </div>
         <div id="{{k}}_" class='row mt-4' style='display: none;'>
           {% for l in v %}
-          <p><h5 class='pl-5'>{{l.0}}</h5></p>
-          <div class="pl-1">
-            <button type="button" name="button" value="hidden" class='hide-show-coins .{{k}}_{{l.0}} btn-secondary container rounded-top'>Show</button>
-            <div class="{{k}}_{{l.0}} col-sm- border rounded-bottom" style='display: none;'>
-              {% for t in l %}
-                {% if forloop.counter > 1 %}
-                  {% for s in t|slice:":1" %}
-                    <div class="data">
-                      <div class=" container bg-light p-1">
-                        <h5 class=''>Precent: {{s.precent}}%</h5>
+            {% if l.1 %}
+            <p><h5 class='pl-5'>{{l.0}}</h5></p>
+            <div class="pl-1">
+              <button type="button" name="button" value="hidden" class='hide-show-coins .{{k}}_{{l.0}} btn-secondary container rounded-top'>Show</button>
+              <div class="{{k}}_{{l.0}} col-sm- border rounded-bottom" style='display: none;'>
+                {% for t in l %}
+                  {% if forloop.counter > 1 %}
+                    {% for s in t %}
+                      <div class="data">
+                        <div class=" container bg-light p-1">
+                          <h5 class=''>Precent: {{s.precent}}%</h5>
+                        </div>
+                        <div class=" container bg-dark p-1 text-white">
+                          <h5 class=''>Pair<br>{{s.baseFrom}}/{{s.targetFrom}} --> {{s.baseTo}}/{{s.targetTo}}</h5>
+                        </div>
+                        <div class=" container bg-light p-1">
+                          <h5 class=''>Coverted price to usd<br>{{s.convertedPriceFrom}}<span class='text-success'>$</span> --> {{s.convertedPriceTo}}<span class='text-success'>$</span></h5>
+                        </div>
+                        <div class=" container bg-dark p-1 text-white">
+                          <h5 class=''>Markets<br>{{s.from}} --> {{s.to}}</h5>
+                        </div>
+                        <div class=" container bg-light p-1">
+                          <h5 class=''>Volume<br>{{s.volume}}<span class='text-success'>$</span></h5>
+                        </div>
+                        <div class=" container bg-dark p-1 text-white">
+                          <h5 class=''><p>Coin fee: {% for f in s.fees %} <a href="{{f}}">{{f}}</a><br>{% endfor %}</p></h5>
+                        </div>
+                        {% if t|length > 1%}
+                          <form class="pl-3 pt-2" method="get">
+                            <input type="text" name="name" hidden value="{{l.0}}">
+                            <input type="submit" name="" value="Show only this coin" class='btn btn-warning font-weight-bold mb-2' value='More'>
+                          </form>
+                        {% endif %}
+                        <br>
                       </div>
-                      <div class=" container bg-dark p-1 text-white">
-                        <h5 class=''>Pair<br>{{s.baseFrom}}/{{s.targetFrom}} --> {{s.baseTo}}/{{s.targetTo}}</h5>
-                      </div>
-                      <div class=" container bg-light p-1">
-                        <h5 class=''>Coverted price to usd<br>{{s.convertedPriceFrom}}<span class='text-success'>$</span> --> {{s.convertedPriceTo}}<span class='text-success'>$</span></h5>
-                      </div>
-                      <div class=" container bg-dark p-1 text-white">
-                        <h5 class=''>Markets<br>{{s.from}} --> {{s.to}}</h5>
-                      </div>
-                      <div class=" container bg-light p-1">
-                        <h5 class=''>Volume<br>{{s.volume}}<span class='text-success'>$</span></h5>
-                      </div>
-                      <div class=" container bg-dark p-1 text-white">
-                        <h5 class=''><p>Coin fee: {% for f in s.fees %} <a href="{{f}}">{{f}}</a><br>{% endfor %}</p></h5>
-                      </div>
-                      {% if t|length > 1%}
-                        <form class="pl-3 pt-2" method="get">
-                          <input type="text" name="name" hidden value="{{l.0}}">
-                          <input type="submit" name="" value="More" class='btn btn-warning font-weight-bold mb-2' value='More'>
-                        </form>
-                      {% endif %}
-                    </div>
-                  {% endfor %}
-                {% endif %}
-              {% endfor %}
+                    {% endfor %}
+                  {% endif %}
+                {% endfor %}
+              </div>
             </div>
-          </div>
+            {% endif %}
           {% endfor %}
         </div>
       {% endif %}
