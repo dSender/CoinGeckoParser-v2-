@@ -18,14 +18,18 @@ class OnePairArbitrageView(FormView):
         cl_data = dict()
         name = kwargs.get('name')
         if name is not None and name != '':
-            name = re.split(r'[, ]', name)
+            name = re.sub(r' ', '', name)
+            name = name.split(',')
         else:
             return []
         return name
 
     def get(self, request, *args, **kwargs):
         file = settings.API_FILE
-        data = json.load(open(file, 'r'))
+        try:
+            data = json.load(open(file, 'r'))
+        except json.JSONDecodeError:
+            return HttpResponse('No data available')
         form = self.form_class
         if request.GET:
             get_ = request.GET
@@ -33,8 +37,14 @@ class OnePairArbitrageView(FormView):
             filter_data = dict()
             name = self.cleaned_filter_name(name=get_.get('name'))
             precent = get_.get('precent')
+            volume = get_.get('volume')
+
             if precent is not None and precent != '':
                 precent = int(precent[0])
+
+            if volume is not None and volume != '':
+                volume = int(volume)
+            print(name)
 
             for d, c in data.items():
                 inds = []
@@ -42,15 +52,18 @@ class OnePairArbitrageView(FormView):
                 for i in range(len(c)):
                     if c[i][0] not in name and name != []:
                         inds.append(i)
-                    if precent is not None and precent != '':
+                    if precent is not None and precent != '' or volume is not None and volume != '':
                         for m in range(len(c[i][1])):
-                            if c[i][1][m]['precent'] < precent:
-                                inds_arbits.append([i, m])
+                            if precent is not None and precent != '':
+                                if c[i][1][m]['precent'] < precent:
+                                    inds_arbits.append([i, m])
+                            if volume is not None and volume != '':
+                                if c[i][1][m]['volume'] < volume:
+                                    inds_arbits.append([i, m])
 
                 if inds_arbits:
                     for i in inds_arbits[::-1]:
                         c[i[0]][1].pop(i[1])
-
 
                 if inds:
                     for i in inds[::-1]:
@@ -61,7 +74,6 @@ class OnePairArbitrageView(FormView):
             for i in data[k]:
                 if len(i[1]) != 0:
                     f = True
-                    print(k, v, '\n')
                     break
             if not f:
                 d_keys.append(k)

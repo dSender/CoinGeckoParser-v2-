@@ -11,71 +11,101 @@
     <script type="text/javascript" src="{% static 'js/index.js'%}"></script>
   </head>
   <body>
-    <div class="container-fluid mb-5 ml-3">
-        <p><h2><a class="badge badge-warning pl-5 pr-5 pb-2" href='/'>One pair arbitrage</a></h2></p>
-    </div>
-    <div class="container-fluid">
-      <form method="get">
-        {{form.as_p}}
-        <input type="submit" value="Apply" class='btn btn-light border'>
-      </form>
-    </div>
-    {% for k, v in data.items %}
-      {% if v|length > 0 %}
-        <div id="network-" class='container'>
-          {% if k == '' %}
-          <p><h2 class='display-5'>No network data</h2></p>
-          {% else %}
-          <p><h2 class='display-5'>{{k}}</h2></p>
-          {% endif %}
-          <button type="button" name="button" value="hidden" class='hide-show-network-a #{{k}}_ btn btn-primary'>Show</button>
-        </div>
-        <div id="{{k}}_" class='row mt-4' style='display: none;'>
-          {% for l in v %}
-            {% if l.1 %}
-            <p><h5 class='pl-5'>{{l.0}}</h5></p>
-            <div class="pl-1">
-              <button type="button" name="button" value="hidden" class='hide-show-coins .{{k}}_{{l.0}} btn-secondary container rounded-top'>Show</button>
-              <div class="{{k}}_{{l.0}} col-sm- border rounded-bottom" style='display: none;'>
-                {% for t in l %}
-                  {% if forloop.counter > 1 %}
-                    {% for s in t %}
-                      <div class="data">
-                        <div class=" container bg-light p-1">
-                          <h5 class=''>Precent: {{s.precent}}%</h5>
-                        </div>
-                        <div class=" container bg-dark p-1 text-white">
-                          <h5 class=''>Pair<br>{{s.baseFrom}}/{{s.targetFrom}} --> {{s.baseTo}}/{{s.targetTo}}</h5>
-                        </div>
-                        <div class=" container bg-light p-1">
-                          <h5 class=''>Coverted price to usd<br>{{s.convertedPriceFrom}}<span class='text-success'>$</span> --> {{s.convertedPriceTo}}<span class='text-success'>$</span></h5>
-                        </div>
-                        <div class=" container bg-dark p-1 text-white">
-                          <h5 class=''>Markets<br>{{s.from}} --> {{s.to}}</h5>
-                        </div>
-                        <div class=" container bg-light p-1">
-                          <h5 class=''>Volume<br>{{s.volume}}<span class='text-success'>$</span></h5>
-                        </div>
-                        <div class=" container bg-dark p-1 text-white">
-                          <h5 class=''><p>Coin fee: {% for f in s.fees %} <a href="{{f}}">{{f}}</a><br>{% endfor %}</p></h5>
-                        </div>
-                        {% if t|length > 1%}
-                          <form class="pl-3 pt-2" method="get">
-                            <input type="text" name="name" hidden value="{{l.0}}">
-                            <input type="submit" name="" value="Show only this coin" class='btn btn-warning font-weight-bold mb-2' value='More'>
-                          </form>
-                        {% endif %}
-                        <br>
-                      </div>
-                    {% endfor %}
-                  {% endif %}
-                {% endfor %}
-              </div>
+    <div class="w-75 ml-5">
+      <div class="container-fluid mb-5 ml-3">
+          <p><h2><a class="badge badge-warning pl-5 pr-5 pb-2" href='/'>One pair arbitrage</a></h2></p>
+      </div>
+      <div class="container-fluid">
+        <form method="get">
+          {{form.as_p}}
+          <input type="submit" value="Apply" class='btn btn-light border'>
+        </form>
+      </div>
+      <div class="">
+        {% for k, v in data.items %}
+          {% if v|length > 0 %}
+            <div id="network-" class='container'>
+              {% if k == '' %}
+              <p><h2 class='display-5'>No network data</h2></p>
+              {% else %}
+              <p><h2 class='display-5'>{{k}}</h2></p>
+              {% endif %}
+              <button type="button" name="button" value="hidden" class='hide-show-network-a #{{k}}_ btn btn-primary'>Show</button>
             </div>
-            {% endif %}
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endfor %}
+            <div id="{{k}}_" class='row mt-4' style='display: none;'>
+              {% for l in v %}
+                {% if l.1 %}
+                <p><h5 class='pl-5'>{{l.0}}</h5></p>
+                <div class="pl-1 col-sm-">
+                  <button type="button" name="button" value="hidden" class='hide-show-coins .{{k}}_{{l.0}} btn-secondary container rounded-top'>Show</button>
+                  <div class="{{k}}_{{l.0}} border rounded-bottom" style='display: none;'>
+                    {% for t in l %}
+                      {% if forloop.counter > 1 %}
+                        {% if not form.name.value %}
+                          {% for s in t|slice:":1" %}
+                            <div class="data">
+                              <div class=" container bg-light p-1">
+                                <h5 class=''>Precent: {{s.precent}}%</h5>
+                              </div>
+                              <div class=" container bg-dark p-1 text-white">
+                                <h5 class=''>Pair<br>{{s.baseFrom}}/{{s.targetFrom}} --> {{s.baseTo}}/{{s.targetTo}}</h5>
+                              </div>
+                              <div class=" container bg-light p-1">
+                                <h5 class=''>Coverted price to usd<br>{{s.convertedPriceFrom}}<span class='text-success'>$</span> --> {{s.convertedPriceTo}}<span class='text-success'>$</span></h5>
+                              </div>
+                              <div class=" container bg-dark p-1 text-white">
+                                <h5 class=''>Markets<br>{{s.from}} --> {{s.to}}</h5>
+                              </div>
+                              <div class=" container bg-light p-1">
+                                <h5 class=''>Volume<br>{{s.volume}}<span class='text-success'>$</span></h5>
+                              </div>
+                              <div class=" container bg-dark p-1 text-white">
+                                <h5 class=''><p>Coin fee: {% for f in s.fees %} <a href="{{f}}">{{f}}</a><br>{% endfor %}</p></h5>
+                              </div>
+                              {% if t|length > 1%}
+                                <form class="pl-3 pt-2" method="get">
+                                  <input type="text" name="name" hidden value="{{l.0}}">
+                                  <input type="submit" name="" value="Show only this coin" class='btn btn-warning font-weight-bold mb-2' value='More'>
+                                </form>
+                              {% endif %}
+                              <br>
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          {% for s in t %}
+                            <div class="data">
+                              <div class=" container bg-light p-1">
+                                <h5 class=''>Precent: {{s.precent}}%</h5>
+                              </div>
+                              <div class=" container bg-dark p-1 text-white">
+                                <h5 class=''>Pair<br>{{s.baseFrom}}/{{s.targetFrom}} --> {{s.baseTo}}/{{s.targetTo}}</h5>
+                              </div>
+                              <div class=" container bg-light p-1">
+                                <h5 class=''>Coverted price to usd<br>{{s.convertedPriceFrom}}<span class='text-success'>$</span> --> {{s.convertedPriceTo}}<span class='text-success'>$</span></h5>
+                              </div>
+                              <div class=" container bg-dark p-1 text-white">
+                                <h5 class=''>Markets<br>{{s.from}} --> {{s.to}}</h5>
+                              </div>
+                              <div class=" container bg-light p-1">
+                                <h5 class=''>Volume<br>{{s.volume}}<span class='text-success'>$</span></h5>
+                              </div>
+                              <div class=" container bg-dark p-1 text-white">
+                                <h5 class=''><p>Coin fee: {% for f in s.fees %} <a href="{{f}}">{{f}}</a><br>{% endfor %}</p></h5>
+                              </div>
+                              <br>
+                            </div>
+                          {% endfor %}
+                        {% endif %}
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
   </body>
 </html>

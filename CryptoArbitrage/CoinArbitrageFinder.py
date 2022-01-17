@@ -16,8 +16,12 @@ def arbitrage_finder_one_pair(tickers, precent=1.01):
         b1 = tickers[t].get('base')
         t1 = tickers[t].get('target')
         volume1 = tickers[t].get('volume')
+        if conv_price1 == 0:
+            continue
         for t2 in range(t+1, len(tickers)):
             conv_price2 = tickers[t2].get('converted price')
+            if conv_price2 == 0:
+                continue
             if ((conv_price1 / conv_price2 <= precent) and (conv_price1 >= conv_price2)) or ((conv_price2 / conv_price1) <= precent and conv_price2 >= conv_price1):
                 continue
             b2 = tickers[t2].get('base')
@@ -33,7 +37,7 @@ def arbitrage_finder_one_pair(tickers, precent=1.01):
                     fees.append(i.fees_url)
             arbit_id += 1
             if conv_price1 > conv_price2:
-                p = ((conv_price1 / conv_price2) - 1) * 100
+                p = ((conv_price1 * 0.997 / conv_price2 * 1.003) - 1) * 100
                 arbits.append({'precent': int(p),
                 'from': m2, 'to': m1,
                 'baseFrom': b2, 'targetFrom': t_2,
@@ -42,7 +46,7 @@ def arbitrage_finder_one_pair(tickers, precent=1.01):
                 'volume': min(volume1, volume2), 'id': arbit_id,
                 'fees': fees})
             else:
-                p = ((conv_price2 / conv_price1) - 1) * 100
+                p = ((conv_price2 * 0.9970 / conv_price1 * 1.003) - 1) * 100
                 arbits.append({'precent': int(p),
                 'from': m1, 'to': m2,
                 'baseFrom': b1, 'targetFrom': t1,
