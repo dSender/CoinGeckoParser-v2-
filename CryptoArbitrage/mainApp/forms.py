@@ -7,5 +7,5 @@ class FilterForm(forms.Form):
     markets = forms.CharField(required=False)
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['markets'].widget.attrs['hidden'] = False
+        super(FilterForm, self).__init__(*args, **kwargs)
+        self.fields['markets'].widget.attrs['hidden'] = True

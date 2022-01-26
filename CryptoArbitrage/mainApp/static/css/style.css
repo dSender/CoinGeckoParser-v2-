@@ -15,7 +15,7 @@
 }
 input{
   float: right;
-  margin-right: 570px;
+  margin-right: 370px;
 }
 
 #main_div{
@@ -23,6 +23,7 @@ input{
 }
 
 .more-button{
+  position: absolute;
   border: 11px solid white;
   background-color: #ffc107;
 }
@@ -32,4 +33,12 @@ input{
   color: grey;
   cursor: pointer;
   background-color: #ffc107;
+}
+
+.hide-show-coins{
+  width: 100px;
+}
+
+form.ml-5 > p:nth-child(4) > label:nth-child(1){
+  visibility: hidden;
 }

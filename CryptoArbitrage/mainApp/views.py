@@ -40,7 +40,8 @@ class OnePairArbitrageView(FormView):
             name = self.cleaned_filter_name(name=get_.get('name'))
             precent = get_.get('precent')
             volume = get_.get('volume')
-
+            markets = get_.get('markets').split('/')
+            
             if precent is not None and precent != '':
                 precent = int(precent[0])
 

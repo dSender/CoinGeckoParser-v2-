@@ -12,19 +12,19 @@
   <link rel="stylesheet" href="{% static 'css/style.css'%}">
 </head>
 <body>
-  <div class="ml-5" id='main_div'>
+  <div class="ml-5 mb-5" id='main_div'>
     <div class="container-fluid mb-5 ml-3">
       <p><h2><a class="badge badge-warning pl-5 pr-5 pb-2" href='/'>One pair arbitrage</a></h2></p>
     </div>
     <div class="row">
-      <div class="col-6">
-        <form method="get">
+      <div class="col-5 mt-5">
+        <form method="get" class='ml-5'>
           {{ form.as_p }}
           <input type="submit" value="Apply" class='btn btn-light border'>
         </form>
       </div>
-      <h5>Markets</h5>
       <div class="col-5">
+        <h5 class='pl-5'>Markets</h5>
         {% for m in markets_list %}
         <button type="button" name="{{m}}" class='market-button'>{{m}}</button>
         {% endfor %}
@@ -41,14 +41,13 @@
         {% endif %}
         <button type="button" name="button" value="hidden" class='hide-show-network-a #{{k}}_ btn btn-primary'>Show</button>
       </div>
-      <div id="{{k}}_" class='row mt-4' style='display: none;'>
+      <div id="{{k}}_" class='row mt-2 ml-5' style='display: none;'>
         {% for l in v %}
         {% if l.1 %}
-
         <div class="pl-5 col-sm-">
           <p><h4 class='pl-5'>{{l.0}}</h4></p>
           <button type="button" name="button" value="hidden" class='hide-show-coins .{{k}}_{{l.0}} btn-secondary container rounded-top'>Show</button>
-          <div class="{{k}}_{{l.0}} border rounded-bottom" style='display: none;'>
+          <div class="{{k}}_{{l.0}} border border-secondary rounded-bottom" style='display: none;'>
             {% for t in l %}
               {% if forloop.counter > 1 %}
                 {% if not form.name.value %}
