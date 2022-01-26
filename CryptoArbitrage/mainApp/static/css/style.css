@@ -1,0 +1,35 @@
+.market-button{
+  background-color: white;
+  border-radius: 7px;
+  border: 1px solid black
+}
+.market-button:hover{
+  outline: none;
+  cursor: pointer;
+  background-color: white;
+  border-radius: 7px;
+  border: 1px solid black
+}
+.market-button:focus{
+   outline: none;
+}
+input{
+  float: right;
+  margin-right: 570px;
+}
+
+#main_div{
+  width: 90%;
+}
+
+.more-button{
+  border: 11px solid white;
+  background-color: #ffc107;
+}
+
+.more-button:hover{
+  border: 11px solid white;
+  color: grey;
+  cursor: pointer;
+  background-color: #ffc107;
+}

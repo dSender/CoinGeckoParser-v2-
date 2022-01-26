@@ -26,8 +26,10 @@ class OnePairArbitrageView(FormView):
 
     def get(self, request, *args, **kwargs):
         file = settings.API_FILE
+        markets_list_file = settings.MARKETS_FILE
         try:
             data = json.load(open(file, 'r'))
+            markets_list = json.load(open(markets_list_file, 'r')).get('Markets')
         except json.JSONDecodeError:
             return HttpResponse('No data available')
         form = self.form_class
@@ -44,7 +46,6 @@ class OnePairArbitrageView(FormView):
 
             if volume is not None and volume != '':
                 volume = int(volume)
-            print(name)
 
             for d, c in data.items():
                 inds = []
@@ -81,4 +82,4 @@ class OnePairArbitrageView(FormView):
             data.pop(i)
 
 
-        return render(request, self.template_name, {'data': data, 'form': form})
+        return render(request, self.template_name, {'data': data, 'form': form, 'markets_list': markets_list})

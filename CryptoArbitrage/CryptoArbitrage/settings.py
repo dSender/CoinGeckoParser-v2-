@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 API_FILE = 'onePairCoinArbit.json'
+MARKETS_FILE = 'markets.json'
 
 INSTALLED_APPS = [
     'django.contrib.admin',

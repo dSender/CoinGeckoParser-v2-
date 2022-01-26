@@ -6,16 +6,21 @@ import time
 
 scraper = Scraper()
 
+one_pair_arbitrage_file = 'onePairCoinArbit.json'
+markets_file = 'markets.json'
+
 arbit_id = -1
 def arbitrage_finder_one_pair(tickers, precent=1.01):
     arbits = []
     global arbit_id
+    tmpl_marktets = []
     for t in range(len(tickers)):
         m1 = tickers[t].get('market')
         conv_price1 = tickers[t].get('converted price')
         b1 = tickers[t].get('base')
         t1 = tickers[t].get('target')
         volume1 = tickers[t].get('volume')
+        tmpl_marktets.append(m1)
         if conv_price1 == 0:
             continue
         for t2 in range(t+1, len(tickers)):
@@ -27,6 +32,7 @@ def arbitrage_finder_one_pair(tickers, precent=1.01):
             b2 = tickers[t2].get('base')
             t_2 = tickers[t2].get('target')
             m2 = tickers[t2].get('market')
+            tmpl_marktets.append(m2)
             volume2 = tickers[t2].get('volume')
             if b1 not in (t_2, b2) or t1 not in (t_2, b2):
                 continue
@@ -54,11 +60,23 @@ def arbitrage_finder_one_pair(tickers, precent=1.01):
                 'convertedPriceFrom': conv_price1, 'convertedPriceTo': conv_price2,
                 'volume': min(volume1, volume2), 'id': arbit_id,
                 'fees': fees})
+    try:
+        with open(markets_file, 'r') as f:
+            d = json.load(f)
+            markets_set = set(d['Markets'])
+    except FileNotFoundError:
+        d = dict()
+        markets_set = set()
+    tmpl_marktets = set(tmpl_marktets)
+    markets_set.update(tmpl_marktets)
+    d['Markets'] = list(markets_set)
+    with open(markets_file, 'w+') as f:
+        json.dump(d, f)
     return arbits
 
 
 def arbit_func(coins):
-    with open('onePairCoinArbit.json', 'w+') as file:
+    with open(one_pair_arbitrage_file, 'w+') as file:
         js = dict()
         for coin in coins:
             tic = coin.get_coin_tickers()
