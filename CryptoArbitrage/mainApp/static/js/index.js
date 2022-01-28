@@ -34,6 +34,17 @@ $(document).ready(function(){
   var market_buttons = $('.market-button');
   var mrkets_field = $('#id_markets');
 
+  var selected_markets = mrkets_field.val().split('/');
+
+
+  for (var j=0; j<selected_markets.length; j++){
+    for (var i=0; i<market_buttons.length; i++){
+      if (selected_markets[j] == market_buttons.eq(i).attr('name')){
+        market_buttons.eq(i).attr({'style': 'background-color:#ffc107;'});
+        break;
+      }
+    }
+  }
 
   $(market_buttons).click(function(){
     var selected_markets = mrkets_field.val().split('/');
@@ -49,7 +60,7 @@ $(document).ready(function(){
     if (!flag_market_in_field){
         var new_field_val = exist_val + '/' + n_val;
         mrkets_field.val(new_field_val);
-        $(this).attr({'style': 'background-color:#ffc107;'})
+        $(this).attr({'style': 'background-color:#ffc107;'});
     }
     else{
         var new_field_val = '';
@@ -64,7 +75,7 @@ $(document).ready(function(){
             }
         }
         mrkets_field.val(new_field_val);
-        $(this).attr({'style': 'background-color:#ffffff;'})
+        $(this).attr({'style': 'background-color:#ffffff;'});
     }
   });
 });
