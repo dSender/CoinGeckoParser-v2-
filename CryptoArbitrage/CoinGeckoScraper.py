@@ -12,21 +12,20 @@ class CoinMetaClass:
     def __init__(self):
         self.instance.append(self)
 
-    def instance_len(self):
-        return len(self.instance)
-
 
 class Coin(CoinMetaClass):
     name = ''
     fees_url = ''
     symbol = ''
-    def __init__(self, name, platforms, tickers, fees_url, symbol):
+
+    def __init__(self, name, platforms, tickers, fees_url, symbol, id):
         super().__init__()
         self.name = name
         self.platforms = platforms
         self.tickers = tickers
         self.fees_url = fees_url
         self.symbol = symbol
+        self.id = id
 
     def get_coin_platforms(self):
         return self.platforms
@@ -55,7 +54,12 @@ class Scraper:
             print('Timeout, total calls %d' % self.total_calls)
             self.calls = 0
             time.sleep(self.timeout)
-        return requests.get(url)
+
+        while 1:
+            r = requests.get(url, timeout=10)
+            if r.status_code == 200:
+                break
+        return r
 
     def get_servers_status(self):
         ping_url = 'https://api.coingecko.com/api/v3/ping'
