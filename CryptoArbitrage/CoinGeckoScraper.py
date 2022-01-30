@@ -56,9 +56,13 @@ class Scraper:
             time.sleep(self.timeout)
 
         while 1:
-            r = requests.get(url, timeout=10)
-            if r.status_code == 200:
-                break
+            try:
+                r = requests.get(url, timeout=10)
+            except requests.exceptions.ReadTimeout:
+                continue
+            else:
+                if r.status_code == 200:
+                    break
         return r
 
     def get_servers_status(self):

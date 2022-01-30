@@ -46,7 +46,7 @@ class OnePairArbitrageView(FormView):
                 markets = None
 
             if precent is not None and precent != '':
-                precent = int(precent[0])
+                precent = int(precent)
 
             if volume is not None and volume != '':
                 volume = int(volume)
@@ -54,27 +54,25 @@ class OnePairArbitrageView(FormView):
             for d, c in data.items():
                 inds = []
                 inds_arbits = []
-                for i in range(len(c)-1):
+                for i in range(len(c)):
                     if c[i][0] not in name and name != []:
                         inds.append(i)
                     if precent is not None and precent != '' or volume is not None and volume != '' or markets is not None and markets != []:
-                        for m in range(len(c[i][1])-1):
+                        for m in range(len(c[i][1])):
                             if precent is not None and precent != '':
                                 if c[i][1][m]['precent'] < precent:
                                     inds_arbits.append([i, m])
+                                    continue
                             if volume is not None and volume != '':
                                 if c[i][1][m]['volume'] < volume:
                                     inds_arbits.append([i, m])
+                                    continue
                             if markets is not None and markets != []:
                                 if c[i][1][m]['from'] not in markets and c[i][1][m]['to'] not in markets:
                                     inds_arbits.append([i, m])
                 if inds_arbits:
                     for i in inds_arbits[::-1]:
-                        try:
-                            c[i[0]][1].pop(i[1])
-                        except IndexError:
-                            print(d, i)
-                            pass
+                        c[i[0]][1].pop(i[1])
                 if inds:
                     for i in inds[::-1]:
                         c.pop(i)
@@ -89,5 +87,6 @@ class OnePairArbitrageView(FormView):
                 d_keys.append(k)
         for i in d_keys:
             data.pop(i)
+
 
         return render(request, self.template_name, {'data': data, 'form': form, 'markets_list': markets_list})
