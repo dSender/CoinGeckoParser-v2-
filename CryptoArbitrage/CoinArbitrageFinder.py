@@ -35,13 +35,15 @@ def arbitrage_finder_one_pair(tickers, precent=1.01):
             volume2 = tickers[t2].get('volume')
             if b1 not in (t_2, b2) or t1 not in (t_2, b2):
                 continue
+            if min(volume1, volume2) <= 10:
+                continue
 
             fees = list()
             for i in coins:
                 if i.symbol in (t_2, b2):
                     fees.append(i.fees_url)
             if conv_price1 > conv_price2:
-                p = ((conv_price1 * 0.997 / conv_price2 * 1.003) - 1) * 100
+                p = ((conv_price1 * 0.996 / conv_price2 * 1.004) - 1) * 100
                 arbits.append({'precent': int(p),
                 'from': m2, 'to': m1,
                 'baseFrom': b2, 'targetFrom': t_2,
@@ -50,7 +52,7 @@ def arbitrage_finder_one_pair(tickers, precent=1.01):
                 'volume': min(volume1, volume2),
                 'fees': fees})
             else:
-                p = ((conv_price2 * 0.9970 / conv_price1 * 1.003) - 1) * 100
+                p = ((conv_price2 * 0.996 / conv_price1 * 1.004) - 1) * 100
                 arbits.append({'precent': int(p),
                 'from': m1, 'to': m2,
                 'baseFrom': b1, 'targetFrom': t1,
@@ -122,15 +124,14 @@ while 1:
             if scraper.calls == 49:
                 coins = Coin.__base__.instance
                 arbit_func(coins)
-            print('Call %d' % w)
             name, id, symbol = coin[0], coin[1], coin[2]
-            print('Getting data...')
             data = scraper.get_coin_info(id, name)
             if data == None:
                 continue
             platforms, tickers, fees_url = data
             convert_tickers_contracts()
             arbit_id += 1
+            print('Arbit coin %d' % arbit_id)
             update_id(arbit_id)
             Coin(name, platforms, tickers, fees_url, symbol, arbit_id)
     else:

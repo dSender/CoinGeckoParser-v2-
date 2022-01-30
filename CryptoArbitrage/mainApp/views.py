@@ -54,11 +54,11 @@ class OnePairArbitrageView(FormView):
             for d, c in data.items():
                 inds = []
                 inds_arbits = []
-                for i in range(len(c)):
+                for i in range(len(c)-1):
                     if c[i][0] not in name and name != []:
                         inds.append(i)
                     if precent is not None and precent != '' or volume is not None and volume != '' or markets is not None and markets != []:
-                        for m in range(len(c[i][1])):
+                        for m in range(len(c[i][1])-1):
                             if precent is not None and precent != '':
                                 if c[i][1][m]['precent'] < precent:
                                     inds_arbits.append([i, m])
@@ -68,11 +68,13 @@ class OnePairArbitrageView(FormView):
                             if markets is not None and markets != []:
                                 if c[i][1][m]['from'] not in markets and c[i][1][m]['to'] not in markets:
                                     inds_arbits.append([i, m])
-
                 if inds_arbits:
                     for i in inds_arbits[::-1]:
-                        c[i[0]][1].pop(i[1])
-
+                        try:
+                            c[i[0]][1].pop(i[1])
+                        except IndexError:
+                            print(d, i)
+                            pass
                 if inds:
                     for i in inds[::-1]:
                         c.pop(i)
