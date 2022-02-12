@@ -35,7 +35,7 @@ def arbitrage_finder_one_pair(tickers, precent=1.01):
             volume2 = tickers[t2].get('volume')
             if b1 not in (t_2, b2) or t1 not in (t_2, b2):
                 continue
-            if min(volume1, volume2) <= 10:
+            if min(volume1, volume2) <= 25:
                 continue
 
             fees = list()
@@ -44,6 +44,8 @@ def arbitrage_finder_one_pair(tickers, precent=1.01):
                     fees.append(i.fees_url)
             if conv_price1 > conv_price2:
                 p = ((conv_price1 * 0.996 / conv_price2 * 1.004) - 1) * 100
+                if p < 1:
+                    continue
                 arbits.append({'precent': int(p),
                 'from': m2, 'to': m1,
                 'baseFrom': b2, 'targetFrom': t_2,
@@ -53,6 +55,8 @@ def arbitrage_finder_one_pair(tickers, precent=1.01):
                 'fees': fees})
             else:
                 p = ((conv_price2 * 0.996 / conv_price1 * 1.004) - 1) * 100
+                if p < 1:
+                    continue
                 arbits.append({'precent': int(p),
                 'from': m1, 'to': m2,
                 'baseFrom': b1, 'targetFrom': t1,

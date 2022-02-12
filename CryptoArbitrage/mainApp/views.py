@@ -40,13 +40,15 @@ class OnePairArbitrageView(FormView):
             name = self.cleaned_filter_name(name=get_.get('name'))
             precent = get_.get('precent')
             volume = get_.get('volume')
+            checked_markets = get_.get('only_checked_markets')
+            print(checked_markets)
             try:
                 markets = get_.get('markets').split('/')[1:]
             except AttributeError:
                 markets = None
 
             if precent is not None and precent != '':
-                precent = int(precent)
+                precent = float(precent)
 
             if volume is not None and volume != '':
                 volume = int(volume)
@@ -68,7 +70,10 @@ class OnePairArbitrageView(FormView):
                                     inds_arbits.append([i, m])
                                     continue
                             if markets is not None and markets != []:
-                                if c[i][1][m]['from'] not in markets and c[i][1][m]['to'] not in markets:
+                                f, t = c[i][1][m]['from'] not in markets, c[i][1][m]['to'] not in markets
+                                if (f or t) and checked_markets == 'on':
+                                    inds_arbits.append([i, m])
+                                elif (f and t) and checked_markets is None:
                                     inds_arbits.append([i, m])
                 if inds_arbits:
                     for i in inds_arbits[::-1]:

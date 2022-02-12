@@ -43,7 +43,7 @@ class Scraper:
 
     calls = 0
     total_calls = 0
-    def __init__(self, api_calls_limit=50, timeout=60):
+    def __init__(self, api_calls_limit=49, timeout=60):
         self.api_calls_limit = api_calls_limit
         self.timeout = timeout
 
@@ -58,7 +58,7 @@ class Scraper:
         while 1:
             try:
                 r = requests.get(url, timeout=10)
-            except requests.exceptions.ReadTimeout:
+            except:
                 continue
             else:
                 if r.status_code == 200:
